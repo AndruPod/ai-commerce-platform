@@ -1,0 +1,52 @@
+{
+  "name": "vsa-commerce-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Commerce/data foundation for the Victory Skating Academy 1-Year Online Ballet Club prototype",
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint \"{src,test,scripts}/**/*.ts\"",
+    "test": "jest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "ts-node -r tsconfig-paths/register src/database/migrate.ts",
+    "db:seed": "ts-node -r tsconfig-paths/register src/database/seed/seed.ts",
+    "test:e2e": "jest --config test/jest-e2e.config.js --runInBand",
+    "eval:ai": "ts-node -r tsconfig-paths/register scripts/eval-ai.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.2.7",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/core": "^11.2.7",
+    "@nestjs/platform-express": "^11.2.7",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "dotenv": "^18.0.5",
+    "drizzle-orm": "^0.45.3",
+    "luxon": "^3.7.2",
+    "openai": "^7.27.0",
+    "pg": "^8.23.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@nestjs/cli": "^11.0.24",
+    "@nestjs/testing": "^11.2.7",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^26.6.4",
+    "@types/pg": "^8.23.1",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^10.11.0",
+    "jest": "^30.5.2",
+    "ts-jest": "^29.4.14",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.0"
+  }
+}

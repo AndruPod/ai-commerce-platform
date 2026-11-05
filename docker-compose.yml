@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vsa-commerce-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vsa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vsa}
+      POSTGRES_DB: ${POSTGRES_DB:-vsa_commerce}
+    ports:
+      - '${POSTGRES_PORT:-5434}:5432'
+    volumes:
+      - vsa_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-vsa} -d ${POSTGRES_DB:-vsa_commerce}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  vsa_pgdata:
