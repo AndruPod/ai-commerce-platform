@@ -1,0 +1,105 @@
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend Checks
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: vsa
+          POSTGRES_PASSWORD: vsa
+          POSTGRES_DB: vsa_commerce
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd "pg_isready -U vsa -d vsa_commerce"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://vsa:vsa@localhost:5434/vsa_commerce
+      PORT: 3001
+      OPENAI_API_KEY: ""
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm exec jest --runInBand
+
+      - name: Build
+        run: pnpm build
+
+      - name: Database migrations
+        run: pnpm db:migrate
+
+      - name: Seed database
+        run: pnpm db:seed
+
+      - name: E2E tests
+        run: pnpm test:e2e
+
+  frontend:
+    name: Frontend Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --dir web typecheck
+
+      - name: Lint
+        run: pnpm --dir web lint
+
+      - name: Tests
+        run: pnpm --dir web test
+
+      - name: Build
+        run: pnpm --dir web build
